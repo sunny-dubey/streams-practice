@@ -40,3 +40,22 @@ const fs = require('node:fs/promises');
 // };
 
 // write();
+
+const write = async () => {
+  console.time('check');
+  const fileHandle = await fs.open('test.txt', 'w');
+  const stream = fileHandle.createWriteStream();
+  console.log(stream.writableHighWaterMark);
+
+  const buff = Buffer.alloc(16383, 10);
+  console.log(stream.write(buff));
+  console.log(stream.write(Buffer.alloc(1)));
+  stream.on('drain', () => {
+    console.log('sunny');
+  });
+
+  console.log(stream.writableLength);
+  console.timeEnd('check');
+};
+
+write();
